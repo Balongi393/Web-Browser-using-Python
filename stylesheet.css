@@ -1,0 +1,20 @@
+QPushButton {
+   display: inline-block;
+  padding: 1px 4px;
+  font-family: Impact;
+  font:  20px;
+  border: 3px solid #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+}
+QPushButton {
+	background: transparent;
+  	border-color: none;
+  	color: none;
+ }
+QPushButton:hover {
+   background: grey;
+  border-color: grey;
+  color: white;
+}
