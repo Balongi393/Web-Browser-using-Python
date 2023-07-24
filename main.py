@@ -7,16 +7,20 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QIcon, QWindow, QImage
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import *
-class AdressB(QLineEdit):
+
+
+class AddressB(QLineEdit):
     def __init__(self):
         super().__init__()
 
     def mousePressEvent(self, q):
         self.selectAll()
 
+
 class Application(QFrame):
     def __init__(self):
         super().__init__()
+        self.layout = None
         self.setWindowIcon(QIcon("Logo.png"))
         self.setWindowTitle("Balongi")
         self.setBaseSize(1400, 720)
@@ -26,8 +30,8 @@ class Application(QFrame):
     def CreateApplication(self):
         self.layout = QVBoxLayout()
         self.layout.setSpacing(0)
-        self.layout.setContentsMargins(0,0,0,0)
-        #Create Tabs
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        # Create Tabs
         self.tabbar = QTabBar(movable=True, tabsClosable=True)
         self.tabbar.tabCloseRequested.connect(self.CloseTab)
         self.tabbar.tabBarClicked.connect(self.SwitchTab)
@@ -38,23 +42,23 @@ class Application(QFrame):
         # Keep Track at Tabs
         self.tabCount = 0
         self.tabs = []
-        #Create AddressBar
+        # Create AddressBar
         self.Toolbar = QWidget()
         self.Toolbar.setObjectName("Toolbar")
         self.Toolbarlayout = QHBoxLayout()
-        self.addressb = AdressB()
+        self.addressb = AddressB()
         self.AddTabButton = QPushButton("🞢")
-        #Connect addressbar + button signals
+        # Connect addressbar + button signals
         self.addressb.returnPressed.connect(self.Browse)
         self.AddTabButton.clicked.connect(self.AddTab)
-        #Set toolbar buttons
+        # Set toolbar buttons
         self.BackButton = QPushButton("🠜")
         self.BackButton.clicked.connect(self.GoBack)
         self.ForwardButton = QPushButton("🠞")
         self.ForwardButton.clicked.connect(self.GoForward)
         self.ReloadButton = QPushButton("⭮")
         self.ReloadButton.clicked.connect(self.ReloadPage)
-        #Build a toolbar
+        # Build a toolbar
         self.Toolbar.setLayout(self.Toolbarlayout)
         self.Toolbarlayout.addWidget(self.BackButton)
         self.Toolbarlayout.addWidget(self.ForwardButton)
@@ -63,7 +67,7 @@ class Application(QFrame):
         self.Toolbarlayout.addWidget(self.AddTabButton)
         # Set Main View
         self.container = QWidget()
-        self.container.layout  = QStackedLayout()
+        self.container.layout = QStackedLayout()
         self.container.setLayout(self.container.layout)
 
         self.layout.addWidget(self.tabbar)
@@ -74,29 +78,29 @@ class Application(QFrame):
         self.show()
 
     def CloseTab(self, i):
-       self.tabbar.removeTab(i)
+        self.tabbar.removeTab(i)
 
     def AddTab(self):
         i = self.tabCount
         self.tabs.append(QWidget())
         self.tabs[i].layout = QVBoxLayout()
-        self.tabs[i].layout.setContentsMargins(0,0,0,0)
-        #For tab switching
+        self.tabs[i].layout.setContentsMargins(0, 0, 0, 0)
+        # For tab switching
         self.tabs[i].setObjectName("tab" + str(i))
-        #Open webview
+        # Open webview
         self.tabs[i].content = QWebEngineView()
         self.tabs[i].content.load(QUrl.fromUserInput("http://google.com"))
         self.tabs[i].content.titleChanged.connect(lambda: self.SetTabContent(i, "title"))
         self.tabs[i].content.iconChanged.connect(lambda: self.SetTabContent(i, "icon"))
         self.tabs[i].content.urlChanged.connect(lambda: self.SetTabContent(i, "url"))
-        #Add web view to tabs layout
+        # Add web view to tabs layout
         self.tabs[i].layout.addWidget(self.tabs[i].content)
         # Set Top Level Tab from list to layout
         self.tabs[i].setLayout(self.tabs[i].layout)
-        #Add tab to top level stackwidget
+        # Add tab to top level stackwidget
         self.container.layout.addWidget(self.tabs[i])
         self.container.layout.setCurrentWidget(self.tabs[i])
-        #Set the tabs at the top of the screen
+        # Set the tabs at the top of the screen
         self.tabbar.addTab("New Tab")
         self.tabbar.setTabData(i, {"object": "tab" + str(i), "initial": i})
         print("tabData: ", self.tabbar.tabData(i)["object"])
@@ -154,6 +158,7 @@ class Application(QFrame):
                     running = False
                 else:
                     count += 1
+
     def GoBack(self):
         activeIndex = self.tabbar.currentIndex()
         tab_name = self.tabbar.tabData(activeIndex)["object"]
@@ -180,7 +185,3 @@ if __name__ == "__main__":
         app.setStyleSheet(style.read())
 
     sys.exit(app.exec_())
-
-
-
-
